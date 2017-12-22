@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.shenhaichen.capstone_project_accountbook.AddingActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="@color/light_yellow"
+        android:id="@+id/activity_add_top_layout"
+        >
+
+        <Button
+            android:background="@drawable/back_btn_press"
+            android:layout_width="35dp"
+            android:layout_height="30dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_margin="10dp"
+            android:id="@+id/activity_add_btn_back"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/add_record"
+            android:textSize="25dp"
+            android:layout_alignTop="@+id/activity_add_btn_back"
+            android:layout_centerHorizontal="true" />
+    </RelativeLayout>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:id="@+id/activity_add_input"
+        android:layout_below="@+id/activity_add_top_layout"
+        android:hint="0.00"
+        android:textColorHint="@color/green"
+        android:textColor="@color/green"
+        android:textSize="30sp" />
+
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:id="@+id/activity_add_btn_category"
+        android:layout_below="@+id/activity_add_input"
+        ></Spinner>
+
+    <View
+        android:layout_width="376dp"
+        android:layout_height="3px"
+        android:layout_marginLeft="4dp"
+        android:layout_below="@+id/activity_add_btn_category"
+        android:background="@color/line_gray" />
+
+    <Spinner
+        android:layout_marginTop="9dp"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:id="@+id/activity_add_btn_payment"
+        android:layout_below="@+id/activity_add_btn_category"
+        ></Spinner>
+
+    <View
+        android:layout_width="376dp"
+        android:layout_height="3px"
+        android:layout_marginLeft="4dp"
+        android:layout_below="@+id/activity_add_btn_payment"
+        android:background="@color/line_gray" />
+
+    <Spinner
+        android:layout_marginTop="9dp"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:id="@+id/activity_add_btn_style"
+        android:layout_below="@+id/activity_add_btn_payment"
+        ></Spinner>
+
+    <View
+        android:layout_width="376dp"
+        android:layout_height="3px"
+        android:layout_marginLeft="4dp"
+        android:layout_below="@+id/activity_add_btn_style"
+        android:background="@color/line_gray" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:hint="@string/comment"
+        android:textColorHint="@color/gray"
+        android:textSize="18dp"
+        android:id="@+id/activity_add_comment"
+        android:layout_marginTop="12dp"
+        android:layout_below="@+id/activity_add_btn_style"
+        />
+
+    <Button
+        android:id="@+id/activity_add_btn_save"
+        android:layout_width="230dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignTop="@+id/activity_add_btn_more"
+        android:textSize="20dp"
+        android:background="@color/yellow"
+        android:layout_marginLeft="10dp"
+        android:textColor="@color/bg_white"
+        android:layout_marginBottom="5dp"
+        android:text="@string/save" />
+
+    <Button
+        android:id="@+id/activity_add_btn_more"
+        android:layout_width="125dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="5dp"
+        android:layout_toRightOf="@+id/activity_add_btn_save"
+        android:textSize="20dp"
+        android:layout_marginLeft="8dp"
+        android:textColor="@color/bg_white"
+        android:background="@color/dark_gray"
+        android:text="@string/add_more" />
+
+
+    <android.inputmethodservice.KeyboardView
+        android:id="@+id/keyboard_view"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:focusable="true"
+        android:background="@color/lightblack"
+        android:focusableInTouchMode="true"
+        android:keyTextColor="@color/div_white"
+        android:visibility="invisible" />
+
+
+</RelativeLayout>

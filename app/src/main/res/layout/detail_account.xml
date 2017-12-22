@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+  >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:text="31/Dec"
+        android:padding="7dp"
+        android:id="@+id/detail_account_date"
+        />
+
+    <View
+        android:layout_width="70dp"
+        android:layout_height="3px"
+        android:layout_marginTop="3dp"
+        android:layout_below="@+id/detail_account_date"
+        android:background="@color/div_white"
+        />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_below="@+id/detail_account_date"
+        >
+
+        <ImageView
+            android:id="@+id/detail_account_image"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:layout_alignParentLeft="true"
+            android:layout_margin="5dp"
+            android:textColor="@color/dark_gray" />
+
+        <TextView
+            android:id="@+id/detail_account_category"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/detail_account_image"
+            android:paddingTop="10dp"
+            android:paddingLeft="10dp"
+            android:textColor="@color/black"
+            android:textSize="20dp" />
+
+        <TextView
+            android:id="@+id/detail_account_payment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/detail_account_category"
+            android:paddingLeft="11dp"
+            android:paddingTop="7dp"
+            android:layout_toRightOf="@+id/detail_account_image"
+            android:textColor="@color/lightblack"
+            android:textSize="13dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:textSize="17dp"
+            android:text="$ 99.99"
+            android:id="@+id/detail_account_number"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="15dp"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="5dp"
+            android:textSize="17dp"
+            android:text="fweafasdfasdf"
+            android:id="@+id/detail_account_comment"
+            android:layout_below="@+id/detail_account_number"
+            android:layout_alignParentRight="true"
+            android:minLines="1"
+            />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="3px"
+            android:layout_marginTop="3dp"
+            android:layout_below="@+id/detail_account_comment"
+            android:background="@color/div_white"
+            />
+
+    </RelativeLayout>
+
+
+
+</RelativeLayout>
