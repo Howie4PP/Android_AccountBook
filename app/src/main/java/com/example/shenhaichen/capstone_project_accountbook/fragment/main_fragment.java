@@ -55,7 +55,7 @@ public class main_fragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.main_fragment_layout, container, false);
-
+        //使用butterknife去绑定
         ButterKnife.bind(this,view);
 
         return view;

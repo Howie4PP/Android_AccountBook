@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    >
+
+    <ImageView
+        android:id="@+id/main_bottom_item_img1"
+        android:layout_width="55dp"
+        android:layout_height="55dp"
+        android:layout_alignParentLeft="true"
+        android:layout_margin="5dp"
+        android:textColor="@color/dark_gray"
+        android:textSize="17dp" />
+
+    <TextView
+        android:id="@+id/main_bottom_item_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/main_bottom_item_img1"
+        android:paddingTop="20dp"
+        android:paddingLeft="10dp"
+        android:textColor="@color/black"
+        android:textSize="20dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:textSize="17dp"
+        android:textColor="@color/red"
+        android:id="@+id/main_bottom_item_income"
+        android:layout_toLeftOf="@+id/main_bottom_img2"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:textSize="17dp"
+        android:textColor="@color/green"
+        android:id="@+id/main_bottom_item_outcome"
+        android:layout_toLeftOf="@+id/main_bottom_img2"
+        />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:background="@mipmap/triangle"
+        android:layout_margin="21dp"
+        android:id="@+id/main_bottom_img2"
+        android:layout_alignParentRight="true"
+        />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="3px"
+        android:layout_marginTop="6dp"
+        android:layout_below="@+id/main_bottom_img2"
+        android:background="@color/div_white"
+        />
+
+</RelativeLayout>
