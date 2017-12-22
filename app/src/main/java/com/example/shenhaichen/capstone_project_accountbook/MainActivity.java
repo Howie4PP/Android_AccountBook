@@ -17,11 +17,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        /* Use AppCompatActivity's method getMenuInflater to get a handle on the menu inflater */
         MenuInflater inflater = getMenuInflater();
-        /* Use the inflater's inflate method to inflate our visualizer_menu layout to this menu */
         inflater.inflate(R.menu.main_menu, menu);
-        /* Return true so that the visualizer_menu is displayed in the Toolbar */
+        // 返回true去显示在toolbar
         return true;
     }
     @Override
