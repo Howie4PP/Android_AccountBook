@@ -1,23 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<fragment
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.shenhaichen.capstone_project_accountbook.MainActivity">
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:layout="@layout/main_fragment_layout"
+    android:name="com.example.shenhaichen.capstone_project_accountbook.fragment.main_fragment" />
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/content_layout"
-        android:layout_above="@+id/divider_view"
-        >
-    </FrameLayout>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="3px"
-        android:id="@+id/divider_view"
-        android:background="@color/div_white"
-        />
-
-</RelativeLayout>
