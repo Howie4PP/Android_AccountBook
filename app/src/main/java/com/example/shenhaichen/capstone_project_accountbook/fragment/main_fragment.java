@@ -1,6 +1,7 @@
 package com.example.shenhaichen.capstone_project_accountbook.fragment;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -22,11 +23,9 @@ import com.example.shenhaichen.capstone_project_accountbook.adapter.MainTopAdapt
 import com.example.shenhaichen.capstone_project_accountbook.bean.AddingBottomItem;
 import com.example.shenhaichen.capstone_project_accountbook.bean.AddingTopItem;
 import com.example.shenhaichen.capstone_project_accountbook.bean.InfoSource;
+import com.example.shenhaichen.capstone_project_accountbook.database.DatabaseContract;
 import com.example.shenhaichen.capstone_project_accountbook.database.SQLiteUtils;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.example.shenhaichen.capstone_project_accountbook.database.TaskContract;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -39,7 +38,7 @@ import butterknife.ButterKnife;
  * Created by shenhaichen on 22/12/2017.
  */
 
-public class main_fragment extends Fragment implements View.OnClickListener, MainBottomAdapter.OnItemClickListener{
+public class main_fragment extends Fragment implements View.OnClickListener, MainBottomAdapter.OnItemClickListener {
 
     @BindView(R.id.main_fragment_top_recycler_view)
     public RecyclerView topRecyclerView;
@@ -55,7 +54,7 @@ public class main_fragment extends Fragment implements View.OnClickListener, Mai
     private MainBottomAdapter bottomAdapter;
     private SQLiteUtils sqLiteUtils;
     private Intent startAddIntent;
-
+    public static final String TAG = main_fragment.class.getSimpleName();
 
 
     public main_fragment() {
@@ -72,7 +71,7 @@ public class main_fragment extends Fragment implements View.OnClickListener, Mai
 
         View view = inflater.inflate(R.layout.main_fragment_layout, container, false);
         //使用butterknife去绑定
-        ButterKnife.bind(this,view);
+        ButterKnife.bind(this, view);
         topItems = new ArrayList<>();
         bottomItems = new ArrayList<>();
         sqLiteUtils = new SQLiteUtils(getActivity());
@@ -89,147 +88,124 @@ public class main_fragment extends Fragment implements View.OnClickListener, Mai
     }
 
     /**
-     * update all date after user enter some records, this function will query data from SQlite
-     * database.
+     * 在用户输入数据后，更新所有数据，并从数据库中得到最新的数据
      */
     private void updateData() {
-        // query income and outcome data from the database
-        String income = sqLiteUtils.select(new String[]{"amount", "month", "week", "day", "currency"}, "style = ?", new String[]{"0"});
-        String outcome = sqLiteUtils.select(new String[]{"amount", "month", "week", "day", "currency"}, "style = ?", new String[]{"1"});
+        // 从数据库中查询收入和支出
+        Cursor income_cursor = getContext().getContentResolver().query(TaskContract.TaskEntry.ACCOUNT_BOOK_URI,
+                new String[]{"amount", "month", "week", "day", "currency"}, "style = ?",
+                new String[]{"0"}, null);
 
-//        System.out.println("this is income" + income);
-//        System.out.println("this is out" + outcome);
+        Cursor outcome_cursor = getContext().getContentResolver().query(TaskContract.TaskEntry.ACCOUNT_BOOK_URI,
+                new String[]{"amount", "month", "week", "day", "currency"}, "style = ?",
+                new String[]{"1"}, null);
+
         Calendar calendar = Calendar.getInstance();
         int thisMonth = (calendar.get(Calendar.MONTH) + 1);
         textTime.setText(thisMonth + "/2017");
         String currencyFormat = null;
         ArrayList<AddingTopItem> newTopList = new ArrayList<>();
         //if the data comes from database is not empty
-        if (!outcome.equals("[]") || !income.equals("[]")) {
-//                    System.out.println("get the value："+income);
-            double totalInValue = 0.0;
-            double totalOutValue = 0.0;
 
-            double totalMonthInValue = 0.0;
-            double totalMonthOutValue = 0.0;
-
-            double totalWeekInValue = 0.0;
-            double totalWeekOutValue = 0.0;
-
-            double totalTodayInValue = 0.0;
-            double totalTodayOutValue = 0.0;
-
-            int month = 0;
-            int week = 0;
-            int day = 0;
-
-            try {
-
-                // get the income data
-                JSONArray inArray = new JSONArray(income);
-                for (int i = 0; i < inArray.length(); i++) {
-                    JSONObject jsonObject = inArray.getJSONObject(i);
-                    // this is calculate the total income value of the year
-                    totalInValue += Double.parseDouble(jsonObject.getString("amount"));
-
-                    month = Integer.parseInt(jsonObject.getString("month"));
-                    week = Integer.parseInt(jsonObject.getString("week"));
-                    day = Integer.parseInt(jsonObject.getString("day"));
-
-                    currencyFormat = jsonObject.getString("currency");
-
-                    if (thisMonth == month) {
-                        totalMonthInValue += Double.parseDouble(jsonObject.getString("amount"));
-                        if (calendar.get(Calendar.WEEK_OF_MONTH) == week) {
-                            totalWeekInValue += Double.parseDouble(jsonObject.getString("amount"));
-                            if (calendar.get(Calendar.DAY_OF_MONTH) == day) {
-                                totalTodayInValue += Double.parseDouble(jsonObject.getString("amount"));
-                            }
-                        }
-                    }
-                }
-
-                //get the outcome data
-                JSONArray outArray = new JSONArray(outcome);
-                for (int i = 0; i < outArray.length(); i++) {
-                    JSONObject jsonObject = outArray.getJSONObject(i);
-//                    System.out.println("outcome:" + jsonObject.getString("amount"));
-//                    System.out.println("month" + jsonObject.getString("month"));
-//                    System.out.println("week" + jsonObject.getString("week"));
-//                    System.out.println("day" + jsonObject.getString("day"));
-
-                    totalOutValue += Double.parseDouble(jsonObject.getString("amount"));
-
-                    month = Integer.parseInt(jsonObject.getString("month"));
-                    week = Integer.parseInt(jsonObject.getString("week"));
-                    day = Integer.parseInt(jsonObject.getString("day"));
-                    currencyFormat = jsonObject.getString("currency");
-
-                    if ((calendar.get(Calendar.MONTH) + 1) == month) {
-                        totalMonthOutValue += Double.parseDouble(jsonObject.getString("amount"));
-                        if (calendar.get(Calendar.WEEK_OF_MONTH) == week) {
-                            totalWeekOutValue += Double.parseDouble(jsonObject.getString("amount"));
-                            if (calendar.get(Calendar.DAY_OF_MONTH) == day) {
-                                totalTodayOutValue += Double.parseDouble(jsonObject.getString("amount"));
-                            }
-                        }
-                    }
-                }
-
-//                System.out.println("this is totalMonthInValue:" + totalMonthInValue);
-//                System.out.println("this is totalMonthOutValue:" + totalMonthOutValue);
-//                System.out.println("this is totalWeekInValue:" + totalWeekInValue);
-//                System.out.println("this is totalWeekOutValue:" + totalWeekOutValue);
-//                System.out.println("this is totalInValue:" + totalInValue);
-//                System.out.println("this is totalOutvalue:" + totalOutValue);
-                newTopList.add(new AddingTopItem("Income", changeFormat(currencyFormat, totalInValue)));
-                newTopList.add(new AddingTopItem("Outcome", changeFormat(currencyFormat, totalOutValue)));
-                String[][] allValue = {{changeFormat(currencyFormat, totalTodayInValue), changeFormat(currencyFormat, totalTodayOutValue)},
-                        {changeFormat(currencyFormat, totalWeekInValue), changeFormat(currencyFormat, totalWeekOutValue)},
-                        {changeFormat(currencyFormat, totalMonthInValue), changeFormat(currencyFormat, totalMonthOutValue)},
-                        {changeFormat(currencyFormat, totalInValue), changeFormat(currencyFormat, totalOutValue)}};
-//                System.out.println("totalMonthOutValue:" + allValue[2][1]);
-                // update the total value which shows on the top of main page
-                topAdapter.updateData(newTopList);
-                // update the detail value which shows on the bottom of the main page
-                bottomAdapter.updateData(allValue);
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }else {
-            // if do not have data, it will show the 0 at the interface
-            if (currencyFormat == null){
+        if (currencyFormat == null){
                 currencyFormat = InfoSource.CURRENCYFORMATE;
             }
-            String[][] allValue = {{changeFormat(currencyFormat, 0.0), changeFormat(currencyFormat, 0.0)},
-                    {changeFormat(currencyFormat, 0.0), changeFormat(currencyFormat, 0.0)},
-                    {changeFormat(currencyFormat, 0.0), changeFormat(currencyFormat, 0.0)},
-                    {changeFormat(currencyFormat, 0.0), changeFormat(currencyFormat, 0.0)}};
-            newTopList.add(new AddingTopItem("Income", changeFormat(currencyFormat, 0.0)));
-            newTopList.add(new AddingTopItem("Outcome", changeFormat(currencyFormat, 0.0)));
-            topAdapter.updateData(newTopList);
-            bottomAdapter.updateData(allValue);
+
+        double totalInValue = 0.0;
+        double totalOutValue = 0.0;
+
+        double totalMonthInValue = 0.0;
+        double totalMonthOutValue = 0.0;
+
+        double totalWeekInValue = 0.0;
+        double totalWeekOutValue = 0.0;
+
+        double totalTodayInValue = 0.0;
+        double totalTodayOutValue = 0.0;
+
+        int month = 0;
+        int week = 0;
+        int day = 0;
+
+        //查询收入情况
+        for (income_cursor.moveToFirst(); !income_cursor.isAfterLast(); income_cursor.moveToNext()) {
+            totalInValue += Double.parseDouble(income_cursor.getString(income_cursor.getColumnIndex(DatabaseContract.ACCOUNT_AMOUNT)));
+            month = Integer.parseInt(income_cursor.getString(income_cursor.getColumnIndex(DatabaseContract.ACCOUNT_MONTH)));
+            week = Integer.parseInt(income_cursor.getString(income_cursor.getColumnIndex(DatabaseContract.ACCOUNT_WEEK)));
+            day = Integer.parseInt(income_cursor.getString(income_cursor.getColumnIndex(DatabaseContract.ACCOUNT_DAY)));
+            currencyFormat = income_cursor.getString(income_cursor.getColumnIndex(DatabaseContract.ACCOUNT_CURRENCY));
+
+            if (thisMonth == month) {
+                totalMonthInValue += Double.parseDouble(income_cursor.getString(income_cursor.getColumnIndex(DatabaseContract.ACCOUNT_AMOUNT)));
+                if (calendar.get(Calendar.WEEK_OF_MONTH) == week) {
+                    totalWeekInValue += Double.parseDouble(income_cursor.getString(income_cursor.getColumnIndex(DatabaseContract.ACCOUNT_AMOUNT)));
+                    if (calendar.get(Calendar.DAY_OF_MONTH) == day) {
+                        totalTodayInValue += Double.parseDouble(income_cursor.getString(income_cursor.getColumnIndex(DatabaseContract.ACCOUNT_AMOUNT)));
+                    }
+                }
+            }
+
         }
+
+        //查询支出情况
+
+        for (outcome_cursor.moveToFirst(); !outcome_cursor.isAfterLast(); outcome_cursor.moveToNext()) {
+            totalOutValue += Double.parseDouble(outcome_cursor.getString(outcome_cursor.getColumnIndex(DatabaseContract.ACCOUNT_AMOUNT)));
+            month = Integer.parseInt(outcome_cursor.getString(outcome_cursor.getColumnIndex(DatabaseContract.ACCOUNT_MONTH)));
+            week = Integer.parseInt(outcome_cursor.getString(outcome_cursor.getColumnIndex(DatabaseContract.ACCOUNT_WEEK)));
+            day = Integer.parseInt(outcome_cursor.getString(outcome_cursor.getColumnIndex(DatabaseContract.ACCOUNT_DAY)));
+            currencyFormat = outcome_cursor.getString(outcome_cursor.getColumnIndex(DatabaseContract.ACCOUNT_CURRENCY));
+
+            if ((calendar.get(Calendar.MONTH) + 1) == month) {
+                totalMonthOutValue += Double.parseDouble(outcome_cursor.getString(outcome_cursor.getColumnIndex(DatabaseContract.ACCOUNT_AMOUNT)));
+                if (calendar.get(Calendar.WEEK_OF_MONTH) == week) {
+                    totalWeekOutValue += Double.parseDouble(outcome_cursor.getString(outcome_cursor.getColumnIndex(DatabaseContract.ACCOUNT_AMOUNT)));
+                    if (calendar.get(Calendar.DAY_OF_MONTH) == day) {
+                        totalTodayOutValue += Double.parseDouble(outcome_cursor.getString(outcome_cursor.getColumnIndex(DatabaseContract.ACCOUNT_AMOUNT)));
+                    }
+                }
+            }
+
+        }
+        newTopList.add(new AddingTopItem("收入", changeFormat(currencyFormat, totalInValue)));
+        newTopList.add(new AddingTopItem("支出", changeFormat(currencyFormat, totalOutValue)));
+        String[][] allValue = {{changeFormat(currencyFormat, totalTodayInValue), changeFormat(currencyFormat, totalTodayOutValue)},
+                {changeFormat(currencyFormat, totalWeekInValue), changeFormat(currencyFormat, totalWeekOutValue)},
+                {changeFormat(currencyFormat, totalMonthInValue), changeFormat(currencyFormat, totalMonthOutValue)},
+                {changeFormat(currencyFormat, totalInValue), changeFormat(currencyFormat, totalOutValue)}};
+
+        // 更新上下两个list的数据
+        topAdapter.updateData(newTopList);
+        bottomAdapter.updateData(allValue);
+
+
+//            // if do not have data, it will show the 0 at the interface
+//
+//            String[][] allValue = {{changeFormat(currencyFormat, 0.0), changeFormat(currencyFormat, 0.0)},
+//                    {changeFormat(currencyFormat, 0.0), changeFormat(currencyFormat, 0.0)},
+//                    {changeFormat(currencyFormat, 0.0), changeFormat(currencyFormat, 0.0)},
+//                    {changeFormat(currencyFormat, 0.0), changeFormat(currencyFormat, 0.0)}};
+//            newTopList.add(new AddingTopItem("收入", changeFormat(currencyFormat, 0.0)));
+//            newTopList.add(new AddingTopItem("支出", changeFormat(currencyFormat, 0.0)));
+//            topAdapter.updateData(newTopList);
+//            bottomAdapter.updateData(allValue);
+//        }
     }
 
+    /**
+     * 初始化控件和adapter
+     */
     private void initRecyclerView() {
-        AddingTopItem item1 = new AddingTopItem("Income", "$ 0.00");
-        AddingTopItem item2 = new AddingTopItem("Outcome", "$ 0.00");
+        AddingTopItem item1 = new AddingTopItem("收入", "$ 0.00");
+        AddingTopItem item2 = new AddingTopItem("支出", "$ 0.00");
         topItems.add(item1);
         topItems.add(item2);
-//        topItems[0] = item1;
-//        topItems[1] = item2;
 
-        AddingBottomItem dayItem = new AddingBottomItem("Today", "$ 0.0", "$ 0.0", R.mipmap.icon_item_today);
-        AddingBottomItem weekItem = new AddingBottomItem("This week", "$ 0.0", "$ 0.0", R.mipmap.icon_item_week);
-        AddingBottomItem monthItem = new AddingBottomItem("This month", "$ 0.0", "$ 0.0", R.mipmap.icon_item_month);
-        AddingBottomItem yearItem = new AddingBottomItem("This year", "$ 0.0", "$ 0.0", R.mipmap.icon_item_year);
+        AddingBottomItem dayItem = new AddingBottomItem("今天", "$ 0.0", "$ 0.0", R.mipmap.icon_item_today);
+        AddingBottomItem weekItem = new AddingBottomItem("本周", "$ 0.0", "$ 0.0", R.mipmap.icon_item_week);
+        AddingBottomItem monthItem = new AddingBottomItem("本月", "$ 0.0", "$ 0.0", R.mipmap.icon_item_month);
+        AddingBottomItem yearItem = new AddingBottomItem("本年", "$ 0.0", "$ 0.0", R.mipmap.icon_item_year);
 
-//        bottomItems[0] = dayItem;
-//        bottomItems[1] = weekItem;
-//        bottomItems[2] = monthItem;
-//        bottomItems[3] = yearItem;
         bottomItems.add(dayItem);
         bottomItems.add(weekItem);
         bottomItems.add(monthItem);
@@ -237,9 +213,9 @@ public class main_fragment extends Fragment implements View.OnClickListener, Mai
 
         topAdapter = new MainTopAdapter(topItems);
         bottomAdapter = new MainBottomAdapter(bottomItems);
+
         // use interface to send view and position from the adapter.
         bottomAdapter.setOnItemClicklistener(this);
-
         topRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         topRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.HORIZONTAL));
         topRecyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -252,7 +228,8 @@ public class main_fragment extends Fragment implements View.OnClickListener, Mai
     }
 
     /**
-     *  this listener is for the button of adding record
+     * this listener is for the button of adding record
+     *
      * @param v
      */
     @Override
@@ -270,36 +247,37 @@ public class main_fragment extends Fragment implements View.OnClickListener, Mai
         switch (position) {
             case 0:
                 Intent dayIntent = new Intent(getActivity(), DetailActivity.class);
-                dayIntent.putExtra("title","Today");
-                dayIntent.putExtra("style",1);
+                dayIntent.putExtra("title", "今天");
+                dayIntent.putExtra("style", 1);
                 startActivity(dayIntent);
 //                Toast.makeText(getActivity(), "this is day activity", Toast.LENGTH_SHORT).show();
                 break;
             case 1:
                 Intent weekIntent = new Intent(getActivity(), DetailActivity.class);
-                weekIntent.putExtra("title","This week");
-                weekIntent.putExtra("style",2);
+                weekIntent.putExtra("title", "本周");
+                weekIntent.putExtra("style", 2);
                 startActivity(weekIntent);
 //                Toast.makeText(getActivity(), "this is week activity", Toast.LENGTH_SHORT).show();
                 break;
             case 2:
                 Intent monthIntent = new Intent(getActivity(), DetailActivity.class);
-                monthIntent.putExtra("title","This week");
-                monthIntent.putExtra("style",3);
+                monthIntent.putExtra("title", "本月");
+                monthIntent.putExtra("style", 3);
                 startActivity(monthIntent);
 //                Toast.makeText(getActivity(), "this is month activity", Toast.LENGTH_SHORT).show();
                 break;
             case 3:
                 Intent yearIntent = new Intent(getActivity(), DetailActivity.class);
-                yearIntent.putExtra("title","This year");
-                yearIntent.putExtra("style",4);
+                yearIntent.putExtra("title", "本年");
+                yearIntent.putExtra("style", 4);
                 startActivity(yearIntent);
 //                Toast.makeText(getActivity(), "this is year activity", Toast.LENGTH_SHORT).show();
                 break;
 
         }
     }
+
     public String changeFormat(String currencyFormat, double value) {
-        return currencyFormat +" "+ String.format("%.2f", value);
+        return currencyFormat + " " + String.format("%.2f", value);
     }
 }

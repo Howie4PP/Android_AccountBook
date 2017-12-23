@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:padding="15dp"
             android:textColor="@color/light_red"
-            android:textSize="17dp" />
+            android:textSize="22sp" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/main_fragment_top_recycler_view"
@@ -40,11 +40,11 @@
             android:layout_gravity="center"
             android:layout_margin="10dp"
             android:background="@mipmap/adding_button"
-            android:textSize="20dp" />
+            android:textSize="20sp" />
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="3px"
+            android:layout_height="3dp"
             android:background="@color/div_white" />
 
         <android.support.v7.widget.RecyclerView

@@ -21,6 +21,12 @@
         <activity android:name=".CleanActivity" />
         <activity android:name=".ChangeActivity" />
         <activity android:name=".DetailActivity"></activity>
+
+        <provider
+            android:name=".database.TaskContentProvider"
+            android:authorities="com.example.shenhaichen.capstone_project_accountbook"
+            android:exported="false" />
+
     </application>
 
 </manifest>

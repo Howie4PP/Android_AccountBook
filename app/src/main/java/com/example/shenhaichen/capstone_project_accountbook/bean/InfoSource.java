@@ -8,7 +8,7 @@ import com.example.shenhaichen.capstone_project_accountbook.R;
 
 public class InfoSource {
 
-    public static String CURRENCYFORMATE = "$";
+    public static String CURRENCYFORMATE = "￥";
 
     public static int getCategoryImage(String category) {
 

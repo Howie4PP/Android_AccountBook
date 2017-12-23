@@ -17,9 +17,13 @@ public class DBOpenHelper extends SQLiteOpenHelper {
         super(context, DBNAME, null, VERSION);
     }
 
+
+    /**
+     *  style中， 0是收入，1是支出
+     * @param db
+     */
     @Override
     public void onCreate(SQLiteDatabase db) {
-
         db.execSQL("create table accountbook (id integer primary key AUTOINCREMENT, amount text,"
                 + "category text,payment integer, comment text, year text,"
                 + "month text, week text, day text, currency text, style Integer);");
