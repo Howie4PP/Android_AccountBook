@@ -29,6 +29,11 @@ public class DetailAccountAdapter extends RecyclerView.Adapter<DetailAccountAdap
         this.context = context;
     }
 
+    public void setmData(List<DetailAccount> mData) {
+        this.mData = mData;
+        notifyDataSetChanged();
+    }
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         mInflater = LayoutInflater.from(parent.getContext());

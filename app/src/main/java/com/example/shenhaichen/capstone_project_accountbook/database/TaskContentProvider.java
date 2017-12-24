@@ -12,6 +12,7 @@ import android.support.annotation.Nullable;
 
 import static com.example.shenhaichen.capstone_project_accountbook.database.TaskContract.TaskEntry.ACCOUNT_TABLE;
 
+
 /**
  * Created by shenhaichen on 23/12/2017.
  */
@@ -110,15 +111,12 @@ public class TaskContentProvider extends ContentProvider {
         int match = sUriMatcher.match(uri);
         //起始为0
         int tasksDeleted;
-
         //删除单个记录
         switch (match) {
             // 运用ID去分辨这个任务
             case ACCOUNT_TASK_WITH_ID:
-                //得到ID
-                String id = uri.getPathSegments().get(1);
                 // 使用 selections/selectionArgs 去过滤得到ID
-                tasksDeleted = db.delete(ACCOUNT_TABLE, "movie_id=?", new String[]{id});
+                tasksDeleted = db.delete(ACCOUNT_TABLE, selection, selectionArgs);
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
@@ -135,6 +133,20 @@ public class TaskContentProvider extends ContentProvider {
 
     @Override
     public int update(@NonNull Uri uri, @Nullable ContentValues values, @Nullable String selection, @Nullable String[] selectionArgs) {
-        return 0;
+        final SQLiteDatabase db = mhelper.getWritableDatabase();
+        int update_num = 0;
+        try {
+            update_num = db.update(ACCOUNT_TABLE, values, selection, selectionArgs);
+        } catch (Exception e) {
+
+        } finally {
+            db.close();
+        }
+        //通知Uri的改变
+        if (update_num > 0) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+        return update_num;
     }
+
 }

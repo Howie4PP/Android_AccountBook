@@ -13,11 +13,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class CleanActivity extends AppCompatActivity implements View.OnClickListener{
-    @BindView(R.id.clean_back)
-    public Button btn_back;
+
     @BindView(R.id.btn_clean)
     public Button btn_clean;
-
     private SQLiteUtils sqLiteUtils;
 
     @Override
@@ -25,9 +23,8 @@ public class CleanActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_clean);
         ButterKnife.bind(this);
-        sqLiteUtils = new SQLiteUtils(this);
-        btn_back.setOnClickListener(this);
         btn_clean.setOnClickListener(this);
+        sqLiteUtils = new SQLiteUtils(this);
     }
 
     @Override
@@ -36,11 +33,8 @@ public class CleanActivity extends AppCompatActivity implements View.OnClickList
             case R.id.btn_clean:
                 // clean data
                 sqLiteUtils.clean();
-                InfoSource.CURRENCYFORMATE = "$";
-                Toast.makeText(this,"Successfully clean",Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.clean_back:
-                finish();
+                InfoSource.CURRENCYFORMATE = "￥";
+                Toast.makeText(this,getString(R.string.success_clean),Toast.LENGTH_SHORT).show();
                 break;
         }
     }

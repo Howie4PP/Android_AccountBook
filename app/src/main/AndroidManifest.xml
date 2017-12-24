@@ -16,11 +16,50 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SettingsActivity" />
-        <activity android:name=".AddingActivity" />
-        <activity android:name=".CleanActivity" />
-        <activity android:name=".ChangeActivity" />
-        <activity android:name=".DetailActivity"></activity>
+        <activity android:name=".AddingActivity"
+            android:parentActivityName=".MainActivity"
+            android:label="@string/add_record"
+            >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity"
+                />
+        </activity>
+        <activity android:name=".SettingsActivity"
+            android:label="@string/action_settings"
+            android:parentActivityName=".MainActivity"
+            >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity"
+                />
+        </activity>
+        <activity android:name=".CleanActivity"
+            android:parentActivityName=".SettingsActivity"
+            android:label="@string/clean"
+            >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".SettingsActivity"
+                />
+        </activity>
+        <activity android:name=".ChangeActivity"
+            android:label="@string/change_rate"
+            android:parentActivityName=".SettingsActivity"
+            >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".SettingsActivity"
+                />
+        </activity>
+        <activity android:name=".DetailActivity"
+            android:parentActivityName=".MainActivity"
+            >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity"
+                />
+        </activity>
 
         <provider
             android:name=".database.TaskContentProvider"

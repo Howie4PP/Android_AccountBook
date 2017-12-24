@@ -7,23 +7,10 @@
     android:orientation="vertical"
     tools:context="com.example.shenhaichen.capstone_project_accountbook.SettingsActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Setting"
-        android:textSize="25dp"
-        android:layout_gravity="center"
-        android:padding="10dp"
-        />
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="3px"
-        android:background="@color/line_gray" />
     <android.support.v7.widget.RecyclerView
         android:paddingTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/setting_recyclerView"
-        ></android.support.v7.widget.RecyclerView>
+        android:id="@+id/setting_recyclerView" />
 
 </LinearLayout>

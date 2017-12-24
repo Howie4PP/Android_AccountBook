@@ -6,49 +6,22 @@
     android:layout_height="match_parent"
     tools:context="com.example.shenhaichen.capstone_project_accountbook.ChangeActivity">
 
-    <RelativeLayout
+    <Button
+        android:id="@+id/change_to_cny"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:background="@color/light_yellow"
-        android:id="@+id/change_top_layout"
-        >
-
-        <Button
-            android:background="@drawable/back_btn_press"
-            android:layout_width="35dp"
-            android:layout_height="30dp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_margin="10dp"
-            android:id="@+id/change_btn_back"
-            />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/change"
-            android:textSize="25dp"
-            android:layout_alignTop="@+id/change_btn_back"
-            android:layout_centerHorizontal="true" />
-    </RelativeLayout>
-
-
-    <Button
-        android:id="@+id/change_cny"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/change_top_layout"
-        android:drawableLeft="@drawable/currency_icon_cny"
-        android:text="Change to CNY(￥)？"
+        android:drawableStart="@drawable/currency_icon_cny"
+        android:text="@string/chang_to_cny"
         />
 
     <Button
-        android:id="@+id/change_sg"
+        android:id="@+id/change_to_sg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/change_cny"
-        android:drawableLeft="@drawable/currency_icon_sgd"
-        android:text="Change to SGD(S$)?"
+        android:layout_below="@+id/change_to_cny"
+        android:drawableStart="@drawable/currency_icon_sgd"
+        android:text="@string/chang_to_sgd"
         />
 
 </RelativeLayout>

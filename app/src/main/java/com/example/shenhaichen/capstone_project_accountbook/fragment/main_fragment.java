@@ -178,18 +178,6 @@ public class main_fragment extends Fragment implements View.OnClickListener, Mai
         topAdapter.updateData(newTopList);
         bottomAdapter.updateData(allValue);
 
-
-//            // if do not have data, it will show the 0 at the interface
-//
-//            String[][] allValue = {{changeFormat(currencyFormat, 0.0), changeFormat(currencyFormat, 0.0)},
-//                    {changeFormat(currencyFormat, 0.0), changeFormat(currencyFormat, 0.0)},
-//                    {changeFormat(currencyFormat, 0.0), changeFormat(currencyFormat, 0.0)},
-//                    {changeFormat(currencyFormat, 0.0), changeFormat(currencyFormat, 0.0)}};
-//            newTopList.add(new AddingTopItem("收入", changeFormat(currencyFormat, 0.0)));
-//            newTopList.add(new AddingTopItem("支出", changeFormat(currencyFormat, 0.0)));
-//            topAdapter.updateData(newTopList);
-//            bottomAdapter.updateData(allValue);
-//        }
     }
 
     /**
