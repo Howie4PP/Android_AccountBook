@@ -183,6 +183,7 @@ public class HandleDailyDataUtil implements DetailAccountAdapter.OnItemClickList
     @Override
     public void onClick(View view, DetailAccount detailItem) {
         String id = detailItem.getId();
+        //点击单个数据，而后进行删除
         dialog(id);
     }
 
