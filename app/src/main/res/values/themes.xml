@@ -4,7 +4,7 @@
     <style name="Theme.MyTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">#FFC107</item>
         <item name="colorPrimaryDark">#FFA000</item>
-        <item name="colorAccent">#40C4FF</item>
+        <item name="colorAccent">#448AFF</item>
     </style>
 
     <style name="Theme.MyTheme.Main" parent="Theme.MyTheme">
