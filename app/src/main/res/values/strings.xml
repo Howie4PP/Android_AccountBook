@@ -57,6 +57,13 @@
     <string name="cancel">取消</string>
     <string name="hint">提示</string>
     <string name="no_data">oh,不！您还没有任何数据！</string>
-
+    <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="no_location_data_provided">无位置信息提供</string>
+    <string name="service_not_available">服务不可用</string>
+    <string name="invalid_lat_long_used">无效的经纬度</string>
+    <string name="no_address_found">找不到地址</string>
+    <string name="address_found">找到地址</string>
+    <string name="sg">新加坡</string>
+    <string name="chn">中国</string>
 
 </resources>

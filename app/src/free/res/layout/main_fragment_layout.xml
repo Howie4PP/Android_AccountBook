@@ -2,6 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/main_layout_id"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <LinearLayout
@@ -14,17 +16,21 @@
         <TextView
             android:id="@+id/main_fragment_time"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="15dp"
+            android:layout_height="0dp"
+            android:layout_weight="0.5"
+            android:paddingTop="10dp"
+            android:paddingLeft="10dp"
             android:textColor="@color/light_red"
-            android:textSize="22sp" />
+            android:textSize="18sp" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/main_fragment_top_recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingLeft="15dp">
-        </android.support.v7.widget.RecyclerView>
+            android:layout_height="0dp"
+            android:layout_weight="2"
+            android:nestedScrollingEnabled="false"
+           />
+
     </LinearLayout>
 
     <LinearLayout
@@ -36,7 +42,7 @@
         <ImageButton
             android:id="@+id/main_fragment_record"
             android:layout_width="330dp"
-            android:layout_height="60dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="10dp"
             android:background="@mipmap/adding_button"
@@ -44,15 +50,21 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="3dp"
+            android:layout_height="1dp"
             android:background="@color/div_white" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/main_fragment_bottom_recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-        </android.support.v7.widget.RecyclerView>
+            android:layout_height="wrap_content"
+            />
 
     </LinearLayout>
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        ads:adSize="BANNER"
+        ads:adUnitId="@string/banner_ad_unit_id" />
 </LinearLayout>

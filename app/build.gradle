@@ -16,6 +16,20 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    flavorDimensions("money")
+    productFlavors{
+        free{
+            applicationId "com.example.shenhaichen.capstone_project_accountbook.free"
+//            dependencies{
+//                compile 'com.google.android.gms:play-services-ads:11.6.2'
+//            }
+        }
+        paid{
+            applicationId "com.example.shenhaichen.capstone_project_accountbook.paid"
+        }
+    }
+
 }
 
 dependencies {
@@ -28,4 +42,6 @@ dependencies {
     implementation 'com.android.support:recyclerview-v7:26.1.0'
     compile 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+    compile 'com.google.android.gms:play-services:11.0.4'
+    implementation 'com.android.support:design:26.1.0'
 }

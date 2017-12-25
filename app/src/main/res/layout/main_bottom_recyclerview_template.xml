@@ -6,8 +6,8 @@
 
     <ImageView
         android:id="@+id/main_bottom_item_img1"
-        android:layout_width="55dp"
-        android:layout_height="55dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_alignParentLeft="true"
         android:layout_margin="5dp"
         android:textColor="@color/dark_gray"
@@ -54,7 +54,7 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="3px"
+        android:layout_height="1px"
         android:layout_marginTop="6dp"
         android:layout_below="@+id/main_bottom_img2"
         android:background="@color/div_white"

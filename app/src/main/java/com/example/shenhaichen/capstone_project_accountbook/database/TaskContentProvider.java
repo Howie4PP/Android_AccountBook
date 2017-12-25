@@ -122,7 +122,7 @@ public class TaskContentProvider extends ContentProvider {
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
 
-       //通知Uri的改变
+        //通知Uri的改变
         if (tasksDeleted != 0) {
 
             getContext().getContentResolver().notifyChange(uri, null);
@@ -135,13 +135,8 @@ public class TaskContentProvider extends ContentProvider {
     public int update(@NonNull Uri uri, @Nullable ContentValues values, @Nullable String selection, @Nullable String[] selectionArgs) {
         final SQLiteDatabase db = mhelper.getWritableDatabase();
         int update_num = 0;
-        try {
-            update_num = db.update(ACCOUNT_TABLE, values, selection, selectionArgs);
-        } catch (Exception e) {
+        update_num = db.update(ACCOUNT_TABLE, values, selection, selectionArgs);
 
-        } finally {
-            db.close();
-        }
         //通知Uri的改变
         if (update_num > 0) {
             getContext().getContentResolver().notifyChange(uri, null);

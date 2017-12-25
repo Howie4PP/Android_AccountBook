@@ -1,14 +1,23 @@
 package com.example.shenhaichen.capstone_project_accountbook.fragment;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.ResultReceiver;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,10 +31,15 @@ import com.example.shenhaichen.capstone_project_accountbook.adapter.MainBottomAd
 import com.example.shenhaichen.capstone_project_accountbook.adapter.MainTopAdapter;
 import com.example.shenhaichen.capstone_project_accountbook.bean.AddingBottomItem;
 import com.example.shenhaichen.capstone_project_accountbook.bean.AddingTopItem;
+import com.example.shenhaichen.capstone_project_accountbook.bean.Constants;
 import com.example.shenhaichen.capstone_project_accountbook.bean.InfoSource;
 import com.example.shenhaichen.capstone_project_accountbook.database.DatabaseContract;
-import com.example.shenhaichen.capstone_project_accountbook.database.SQLiteUtils;
 import com.example.shenhaichen.capstone_project_accountbook.database.TaskContract;
+import com.example.shenhaichen.capstone_project_accountbook.service.FetchAddressIntentService;
+import com.example.shenhaichen.capstone_project_accountbook.utils.ChangeRate;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -38,7 +52,8 @@ import butterknife.ButterKnife;
  * Created by shenhaichen on 22/12/2017.
  */
 
-public class main_fragment extends Fragment implements View.OnClickListener, MainBottomAdapter.OnItemClickListener {
+public class main_fragment extends Fragment implements View.OnClickListener, MainBottomAdapter.OnItemClickListener,
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     @BindView(R.id.main_fragment_top_recycler_view)
     public RecyclerView topRecyclerView;
@@ -48,14 +63,20 @@ public class main_fragment extends Fragment implements View.OnClickListener, Mai
     public TextView textTime;
     @BindView(R.id.main_fragment_record)
     public ImageButton btn_record;
+    @BindView(R.id.main_layout_id)
+    public View view ;
     private List<AddingTopItem> topItems;
     private List<AddingBottomItem> bottomItems;
     private MainTopAdapter topAdapter;
     private MainBottomAdapter bottomAdapter;
-    private SQLiteUtils sqLiteUtils;
     private Intent startAddIntent;
     public static final String TAG = main_fragment.class.getSimpleName();
-
+    private ChangeRate mChangeRate;
+    private AddressResultReceiver mResultReceiver;
+    protected GoogleApiClient mGoogleApiClient;
+    protected Location mLastLocation;
+    protected String mAddressOutput;
+    public static boolean showSnackBar = true;
 
     public main_fragment() {
     }
@@ -63,6 +84,7 @@ public class main_fragment extends Fragment implements View.OnClickListener, Mai
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
     }
 
     @Nullable
@@ -70,14 +92,17 @@ public class main_fragment extends Fragment implements View.OnClickListener, Mai
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.main_fragment_layout, container, false);
+        mResultReceiver = new AddressResultReceiver(new Handler());
         //使用butterknife去绑定
         ButterKnife.bind(this, view);
         topItems = new ArrayList<>();
         bottomItems = new ArrayList<>();
-        sqLiteUtils = new SQLiteUtils(getActivity());
         btn_record.setOnClickListener(this);
         initRecyclerView();
         updateData();
+        mChangeRate = new ChangeRate(getContext());
+        buildGoogleApiClient();
+
         return view;
     }
 
@@ -85,7 +110,17 @@ public class main_fragment extends Fragment implements View.OnClickListener, Mai
     public void onStart() {
         super.onStart();
         updateData();
+        mGoogleApiClient.connect();
     }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.disconnect();
+        }
+    }
+
 
     /**
      * 在用户输入数据后，更新所有数据，并从数据库中得到最新的数据
@@ -107,9 +142,9 @@ public class main_fragment extends Fragment implements View.OnClickListener, Mai
         ArrayList<AddingTopItem> newTopList = new ArrayList<>();
         //if the data comes from database is not empty
 
-        if (currencyFormat == null){
-                currencyFormat = InfoSource.CURRENCYFORMATE;
-            }
+        if (currencyFormat == null) {
+            currencyFormat = InfoSource.CURRENCYFORMATE;
+        }
 
         double totalInValue = 0.0;
         double totalOutValue = 0.0;
@@ -238,21 +273,18 @@ public class main_fragment extends Fragment implements View.OnClickListener, Mai
                 dayIntent.putExtra("title", "今天");
                 dayIntent.putExtra("style", 1);
                 startActivity(dayIntent);
-//                Toast.makeText(getActivity(), "this is day activity", Toast.LENGTH_SHORT).show();
                 break;
             case 1:
                 Intent weekIntent = new Intent(getActivity(), DetailActivity.class);
                 weekIntent.putExtra("title", "本周");
                 weekIntent.putExtra("style", 2);
                 startActivity(weekIntent);
-//                Toast.makeText(getActivity(), "this is week activity", Toast.LENGTH_SHORT).show();
                 break;
             case 2:
                 Intent monthIntent = new Intent(getActivity(), DetailActivity.class);
                 monthIntent.putExtra("title", "本月");
                 monthIntent.putExtra("style", 3);
                 startActivity(monthIntent);
-//                Toast.makeText(getActivity(), "this is month activity", Toast.LENGTH_SHORT).show();
                 break;
             case 3:
                 Intent yearIntent = new Intent(getActivity(), DetailActivity.class);
@@ -268,4 +300,91 @@ public class main_fragment extends Fragment implements View.OnClickListener, Mai
     public String changeFormat(String currencyFormat, double value) {
         return currencyFormat + " " + String.format("%.2f", value);
     }
+
+    protected synchronized void buildGoogleApiClient() {
+        mGoogleApiClient = new GoogleApiClient.Builder(getContext())
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+    }
+
+    protected void startIntentService() {
+        Intent intent = new Intent(getContext(), FetchAddressIntentService.class);
+        intent.putExtra(Constants.RECEIVER, mResultReceiver);
+        intent.putExtra(Constants.LOCATION_DATA_EXTRA, mLastLocation);
+        getContext().startService(intent);
+    }
+
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},1);
+        }
+        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        if (mLastLocation != null) {
+            // Determine whether a Geocoder is available.
+            startIntentService();
+        }
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        Log.i(TAG, "Connection suspended");
+        mGoogleApiClient.connect();
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        Log.i(TAG, "Connection failed: ConnectionResult.getErrorCode() = " + connectionResult.getErrorCode());
+    }
+
+    class AddressResultReceiver extends ResultReceiver {
+        public AddressResultReceiver(Handler handler) {
+            super(handler);
+        }
+        /**
+         *  Receives data sent from FetchAddressIntentService and updates the UI in MainActivity.
+         */
+        @Override
+        protected void onReceiveResult(int resultCode, Bundle resultData) {
+            // Display the address string or an error message sent from the intent service.
+            mAddressOutput = resultData.getString(Constants.RESULT_DATA_KEY);
+            if (showSnackBar) {
+                initSnackBar(mAddressOutput);
+                showSnackBar = false;
+            }
+        }
+    }
+
+    /**
+     * 一个小的类似Toast的小工具
+     */
+    private void initSnackBar(String message) {
+
+        int duration = Snackbar.LENGTH_SHORT;
+        Snackbar.make(view, "您当前的位置在"+message, duration).show();
+        changeTheRate(message);
+    }
+
+    private void changeTheRate(String message){
+        if (message.equals(getContext().getString(R.string.chn))){
+            mChangeRate.sgdToCNY();
+            updateData();
+        }else  if (message.equals(getContext().getString(R.string.sg))){
+            mChangeRate.cnyToSGD();
+            updateData();
+        }
+    }
+
+
 }
