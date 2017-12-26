@@ -119,6 +119,10 @@ public class main_fragment extends Fragment implements View.OnClickListener, Mai
         if (mGoogleApiClient.isConnected()) {
             mGoogleApiClient.disconnect();
         }
+        //更新小部件
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(getContext());
+        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(getActivity(), AccountBookWidget.class));
+        AccountBookWidget.updatePlantWidgets(getContext(), AppWidgetManager.getInstance(getContext()),appWidgetIds);
     }
 
 

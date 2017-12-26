@@ -65,5 +65,8 @@
     <string name="address_found">找到地址</string>
     <string name="sg">新加坡</string>
     <string name="chn">中国</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
+    <string name="today_debet">今日账单</string>
 
 </resources>

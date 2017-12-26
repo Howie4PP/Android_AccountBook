@@ -1,6 +1,8 @@
 package com.example.shenhaichen.capstone_project_accountbook.fragment;
 
 import android.Manifest;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -36,6 +38,7 @@ import com.example.shenhaichen.capstone_project_accountbook.bean.InfoSource;
 import com.example.shenhaichen.capstone_project_accountbook.database.DatabaseContract;
 import com.example.shenhaichen.capstone_project_accountbook.database.TaskContract;
 import com.example.shenhaichen.capstone_project_accountbook.service.FetchAddressIntentService;
+import com.example.shenhaichen.capstone_project_accountbook.widget.AccountBookWidget;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.common.ConnectionResult;
@@ -126,6 +129,10 @@ public class main_fragment extends Fragment implements View.OnClickListener, Mai
         if (mGoogleApiClient.isConnected()) {
             mGoogleApiClient.disconnect();
         }
+        //更新小部件
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(getContext());
+        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(getActivity(), AccountBookWidget.class));
+        AccountBookWidget.updatePlantWidgets(getContext(), AppWidgetManager.getInstance(getContext()),appWidgetIds);
     }
 
     /**
